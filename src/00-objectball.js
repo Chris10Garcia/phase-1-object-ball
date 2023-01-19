@@ -119,38 +119,35 @@ function gameObject (){
     return object
 }
 
-// creates game object with data as a global variable
+// creates global game object table
 const objectBallGameObject = gameObject()
 
 // created my own function to have all of the players listed as a single object list
-function playerList(gObj){
-    const allPlayerList = {...gObj.home.players, ...gObj.away.players};
+function playerList(){
+    const allPlayerList = {...objectBallGameObject.home.players, ...objectBallGameObject.away.players};
     return allPlayerList
 }
 
 // function to return points made by "name" of player using playerList
-const numPointsScored = name => playerList(objectBallGameObject)[name].points
+const numPointsScored = name => playerList()[name].points
 
 // function to return points made by "name" of player using playerList
-const shoeSize = name => playerList(objectBallGameObject)[name].shoe
+const shoeSize = name => playerList()[name].shoe
 
 // Used Ternary operator to return teamColors
-const teamColors = tName => objectBallGameObject.home.teamName === tName ? objectBallGameObject.home.colors 
+const teamColors = tName => objectBallGameObject.home.teamName === tName 
+    ? objectBallGameObject.home.colors 
     : objectBallGameObject.away.colors;
 
-function teamName(){
-    const teamNameList =[objectBallGameObject.home.teamName, objectBallGameObject.away.teamName]
-    return teamNameList
+// teamName function, which returns 2 element array with teamnames
+const teamName = () => [objectBallGameObject.home.teamName, objectBallGameObject.away.teamName]
 
-}
-
+// returns the team's jersey number. Used ternary operator
 function playerNumbers(tName){
-    let location;
-    if (tName === 'Brooklyn Nets'){
-        location = 'home'
-    } else {
-        location = 'away'
-    }
+    const location = tName === 'Brooklyn Nets' 
+        ? 'home'
+        : 'away' 
+
     pNumJersay = []
     
     for (const key in objectBallGameObject[location].players){
@@ -159,19 +156,93 @@ function playerNumbers(tName){
     return pNumJersay;
 }
 
-console.log(playerNumbers('Brooklyn Nets'))
+// this is simple. I already have a function that creates playlist table. 
+// create function that pulls stats for a single player
+const playerStats = name => playerList()[name]
+
+// wanted to create a function that returns the max stat of whatever is requested
+// return value is the name of the player? (or should i do an array with name and score?)
+function maxStat(stat, customTable = false){
+    // if (customTable !== undefined){const pList = playerList()}
+    
+    const pList = customTable === false
+        ? playerList()
+        : customTable
+        
+    let highestScoreValue;
+    let highestScoreKey;
+    
+    for (key in pList){
+        if (highestScoreKey === undefined || highestScoreValue < pList[key][stat]){
+            highestScoreValue = pList[key][stat]
+            highestScoreKey = key
+        }
+    }
+    return highestScoreKey
+}
+
+// call on playlist, access the player name with the maxStat (shoe property) and then access his (rebound property)
+const bigShoeRebounds = () => playerList()[maxStat("shoe")]["rebounds"]
+
+// provide the player name with the maxStat (points property) 
+const mostPointsScored = () => maxStat("points")
+
+// provides winning team name
+function winningTeam(){
+    let home = 0;
+    let away = 0;
+
+    for (player in objectBallGameObject.home.players){
+        home += objectBallGameObject.home.players[player].points
+    }
+    for (player in objectBallGameObject.away.players){
+        away += objectBallGameObject.away.players[player].points
+    }
+    
+    return home > away ? objectBallGameObject.home.teamName : objectBallGameObject.away.teamName
+}
+
+function justPlayerName(){
+    const pList = playerList()
+    const newPList = {}
+    for (key in pList){
+        newPList[key] = {"name length" : key.length -1}
+    }    
+    return newPList
+}
+
+// function playerWithLongestName(){
+//     return maxStat("name length", justPlayerName())
+// }
+
+// using matStat and creating a custom table, this function was easy to do
+const playerWithLongestName = () => maxStat("name length", justPlayerName())
+
+const doesLongNameStealATon = () => (longName = playerWithLongestName()) === (maxStealPlayer = maxStat("steals")) ? true : false
+
+
+console.log(doesLongNameStealATon())
+
+// console.log(playerWithLongestName()("name length", justPlayerName()))     praticing higher order functions
+
+// console.table(objectBallGameObject)
+// console.table(justPlayerName())
+// console.table(playerList())
+// console.log(playerStats("Alan Anderson"))
+// console.log(playerNumbers('Brooklyn Nets'))
 // console log debug tests
 // console.log(teamName())
 // console.log(objectBallGameObject.home.teamName)
 // console.table(objectBallGameObject)
 // console.log(teamColors("Charlotte Hornets"))
-console.table(playerList(objectBallGameObject))
 // console.log(numPointsScored("Alan Anderson"))
 // console.log(shoeSize("Reggie Evans"))
 // console.log(teamColors("Brooklyn Nets"))
 
 
+
 // below are draft code, notes, thoughts
+
 // function teamColors(tName){
 //     if (objectBallGameObject.home.teamName === tName){
 //         return objectBallGameObject.home.colors
@@ -201,3 +272,39 @@ console.table(playerList(objectBallGameObject))
 //     return tLD
 // }
 
+// function teamName(){
+//     const teamNameList =[objectBallGameObject.home.teamName, objectBallGameObject.away.teamName]
+//     return teamNameList
+// }
+
+    // if (tName === 'Brooklyn Nets'){
+    //     location = 'home'
+    // } else {
+    //     location = 'away'
+    // }
+
+    // iteration function to see stat that has the max
+// function takes in 1 parament: player stat to loop through
+// for player in playList
+//      if player[stat] > currently stored : currently stored = player[stat]
+
+        // const currentMaxStat = {}
+        // if (Object.keys(currentMaxStat).length === 0){
+        //     currentMaxStat[key] = pList[key][stat]
+        //     highestScoreKey = key
+
+        // } else if (currentMaxStat[highestScoreKey] < pList[key][stat]){
+        //     currentMaxStat[key] = pList[key][stat]
+        //     delete currentMaxStat[highestScoreKey]
+        //     highestScoreKey = key
+        // }
+        // else if (highestScoreValue < pList[key][stat]){
+        //     highestScoreValue = pList[key][stat]
+        //     highestScoreKey = key
+        // }
+
+// function doesLongNameStealATon() {
+//     // const longName = playerWithLongestName()
+//     // const maxStealPlayer = maxStat("steals")
+//     return (longName = playerWithLongestName()) === (maxStealPlayer = maxStat("steals")) ? true : false
+// }
