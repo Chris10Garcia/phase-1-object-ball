@@ -162,6 +162,7 @@ const playerStats = name => playerList()[name]
 
 // wanted to create a function that returns the max stat of whatever is requested
 // return value is the name of the player? (or should i do an array with name and score?)
+// had to update function to accept custom table. this allowed for reuse
 function maxStat(stat, customTable = false){
     // if (customTable !== undefined){const pList = playerList()}
     
@@ -202,6 +203,7 @@ function winningTeam(){
     return home > away ? objectBallGameObject.home.teamName : objectBallGameObject.away.teamName
 }
 
+// create a custonm object with player names: {"name length" : value}
 function justPlayerName(){
     const pList = playerList()
     const newPList = {}
@@ -211,20 +213,20 @@ function justPlayerName(){
     return newPList
 }
 
-// function playerWithLongestName(){
-//     return maxStat("name length", justPlayerName())
-// }
 
 // using matStat and creating a custom table, this function was easy to do
 const playerWithLongestName = () => maxStat("name length", justPlayerName())
 
+// combined arrow functions with ternary operators
 const doesLongNameStealATon = () => (longName = playerWithLongestName()) === (maxStealPlayer = maxStat("steals")) ? true : false
 
 
-console.log(doesLongNameStealATon())
 
-// console.log(playerWithLongestName()("name length", justPlayerName()))     praticing higher order functions
 
+// below are console log tests for debugging. Below that are notes and test code
+
+
+// console.log(playerWithLongestName()("name length", justPlayerName()))     praticing higher order function
 // console.table(objectBallGameObject)
 // console.table(justPlayerName())
 // console.table(playerList())
@@ -307,4 +309,8 @@ console.log(doesLongNameStealATon())
 //     // const longName = playerWithLongestName()
 //     // const maxStealPlayer = maxStat("steals")
 //     return (longName = playerWithLongestName()) === (maxStealPlayer = maxStat("steals")) ? true : false
+// }
+
+// function playerWithLongestName(){
+//     return maxStat("name length", justPlayerName())
 // }
